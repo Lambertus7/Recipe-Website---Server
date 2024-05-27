@@ -1,12 +1,12 @@
 [
   {
     "id": 1,
-    "name": "Italian",
+    "name": "Breakfast",
     "img_URL": "https://example.com/italian.jpg"
   },
   {
     "id": 2,
-    "name": "Indian",
+    "name": "Lunch",
     "img_URL": "https://example.com/indian.jpg"
   },
   {

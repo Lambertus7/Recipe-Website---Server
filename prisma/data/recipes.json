@@ -1,35 +1,92 @@
 [
-    {
-      "id": 1,
-      "name": "Spaghetti Carbonara",
-      "preptime": 30,
-      "serves": 4,
-      "image_URL": "https://example.com/spaghetti.jpg",
-      "instructions": "Cook the pasta throw in the eggs",
-      "ingredients": "Pasta, eggs, cheese",
-      "categories": {
-        "connect": [{
+  {
+    "id": 1,
+    "name": "Spaghetti Carbonara",
+    "preptime": 30,
+    "serves": 4,
+    "image_URL": "https://example.com/spaghetti.jpg",
+    "instructions": "Cook the pasta throw in the eggs",
+    "ingredients": "Pasta, eggs, cheese",
+    "categories": {
+      "connect": [
+        {
           "id": 1
-        }]
-      },
-      "userId": 1
+        }
+      ]
     },
-    {
-      "id": 2,
-      "name": "Chicken Curry",
-      "preptime": 45,
-      "serves": 6,
-      "image_URL": "https://example.com/chicken-curry.jpg",
-      "instructions": "Cook the pasta throw in the eggs",
-      "ingredients": "Pasta, eggs, cheese",
-      "categories": {
-        "connect": [{
+    "userId": 1
+  },
+  {
+    "id": 2,
+    "name": "Chicken Curry",
+    "preptime": 45,
+    "serves": 6,
+    "image_URL": "https://example.com/chicken-curry.jpg",
+    "instructions": "Cook the pasta throw in the eggs",
+    "ingredients": "Pasta, eggs, cheese",
+    "categories": {
+      "connect": [
+        {
           "id": 2
-        }, {
+        },
+        {
           "id": 3
-        }]
-      },
-      "userId": 2
-    }
-  ]
-  
+        }
+      ]
+    },
+    "userId": 2
+  },
+
+  {
+    "id": 3,
+    "name": "Pancakes",
+    "preptime": 20,
+    "serves": 4,
+    "image_URL": "https://example.com/pancakes.jpg",
+    "instructions": "Mix flour, milk, and eggs. Cook on a hot griddle until golden brown.",
+    "ingredients": "Flour, milk, eggs, sugar, baking powder",
+    "categories": {
+      "connect": [{ "id": 1 }]
+    },
+    "userId": 1
+  },
+  {
+    "id": 4,
+    "name": "Grilled Cheese Sandwich",
+    "preptime": 10,
+    "serves": 1,
+    "image_URL": "https://example.com/grilled-cheese.jpg",
+    "instructions": "Butter the bread, place cheese between slices, and grill until golden brown.",
+    "ingredients": "Bread, cheese, butter",
+    "categories": {
+      "connect": [{ "id": 2 }]
+    },
+    "userId": 2
+  },
+  {
+    "id": 5,
+    "name": "Beef Stroganoff",
+    "preptime": 40,
+    "serves": 4,
+    "image_URL": "https://example.com/beef-stroganoff.jpg",
+    "instructions": "Cook beef and mushrooms, add sour cream and serve over noodles.",
+    "ingredients": "Beef, mushrooms, sour cream, onions, noodles",
+    "categories": {
+      "connect": [{ "id": 3 }]
+    },
+    "userId": 1
+  },
+  {
+    "id": 6,
+    "name": "Caesar Salad",
+    "preptime": 15,
+    "serves": 2,
+    "image_URL": "https://example.com/caesar-salad.jpg",
+    "instructions": "Toss romaine lettuce with Caesar dressing, croutons, and parmesan cheese.",
+    "ingredients": "Romaine lettuce, Caesar dressing, croutons, parmesan cheese",
+    "categories": {
+      "connect": [{ "id": 2 }]
+    },
+    "userId": 2
+  }
+]
