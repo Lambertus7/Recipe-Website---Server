@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "Italian",
+    "img_URL": "https://example.com/italian.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Indian",
+    "img_URL": "https://example.com/indian.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Dinner",
+    "img_URL": "https://example.com/indian.jpg"
+  }
+]

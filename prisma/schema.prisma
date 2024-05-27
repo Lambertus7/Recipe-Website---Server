@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+model User {
+  id       Int      @id @default(autoincrement())
+  username String
+  password String
+  recipes  Recipe[]
+}
+
+model Recipe {
+  id           Int        @id @default(autoincrement())
+  name         String
+  instructions String
+  ingredients  String
+  preptime     Int
+  serves       Int
+  image_URL    String
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id])
+  categories   Category[]
+  comments     Comment[]
+}
+
+model Category {
+  id      Int      @id @default(autoincrement())
+  name    String
+  img_URL String
+  recipes Recipe[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  name      String
+  review    String
+  rating    Int
+  createdAt DateTime @default(now())
+  recipeId  Int
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+}

@@ -1,0 +1,35 @@
+[
+    {
+      "id": 1,
+      "name": "Spaghetti Carbonara",
+      "preptime": 30,
+      "serves": 4,
+      "image_URL": "https://example.com/spaghetti.jpg",
+      "instructions": "Cook the pasta throw in the eggs",
+      "ingredients": "Pasta, eggs, cheese",
+      "categories": {
+        "connect": [{
+          "id": 1
+        }]
+      },
+      "userId": 1
+    },
+    {
+      "id": 2,
+      "name": "Chicken Curry",
+      "preptime": 45,
+      "serves": 6,
+      "image_URL": "https://example.com/chicken-curry.jpg",
+      "instructions": "Cook the pasta throw in the eggs",
+      "ingredients": "Pasta, eggs, cheese",
+      "categories": {
+        "connect": [{
+          "id": 2
+        }, {
+          "id": 3
+        }]
+      },
+      "userId": 2
+    }
+  ]
+  
