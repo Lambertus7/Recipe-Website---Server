@@ -39,7 +39,7 @@ model Recipe {
 model Category {
   id      Int      @id @default(autoincrement())
   name    String
-  img_URL String
+  icon    String
   recipes Recipe[]
 }
 
