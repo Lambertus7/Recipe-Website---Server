@@ -25,6 +25,22 @@ app.get("/recipes", async (req, res) => {
   res.send(allRecipes);
 });
 
+app.get("/recipes/:id", async (req, res) => {
+  const recipeId = Number(req.params.id);
+  if (isNaN(recipeId)) {
+    res.status(400).send();
+    return;
+  }
+  const recipe = await prisma.recipe.findUnique({ where: { id: recipeId } });
+  console.log("Something went wrong!", recipe);
+
+  if (recipe === null) {
+    res.status(404).send({ message: "Something went wrong!" });
+    return;
+  }
+  res.send(recipe);
+});
+
 // Tell the server to start listening, we provide the port here as the first argument.
 // The second argument is a function that runs as soon as the server starts. We use it to log the port number.
 app.listen(port, () => console.log(`⚡ Listening on port: ${port}`));
