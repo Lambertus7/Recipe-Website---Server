@@ -25,6 +25,11 @@ app.get("/recipes", async (req, res) => {
   res.send(allRecipes);
 });
 
+app.get("/categories", async (req, res) => {
+  const allCategories = await prisma.category.findMany();
+  res.send(allCategories);
+});
+
 app.get("/recipes/:id", async (req, res) => {
   const recipeId = Number(req.params.id);
   if (isNaN(recipeId)) {

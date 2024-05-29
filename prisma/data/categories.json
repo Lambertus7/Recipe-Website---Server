@@ -1,17 +1,22 @@
 [
   {
     "id": 1,
-    "name": "Breakfast",
-    "img_URL": "https://example.com/italian.jpg"
+    "icon": "🍳",
+    "name": "Breakfast"
   },
   {
     "id": 2,
-    "name": "Lunch",
-    "img_URL": "https://example.com/indian.jpg"
+    "icon": "🥯",
+    "name": "Lunch"
   },
   {
     "id": 3,
-    "name": "Dinner",
-    "img_URL": "https://example.com/indian.jpg"
+    "icon": "🥘",
+    "name": "Dinner"
+  },
+  {
+    "id": 4,
+    "icon": "🧁",
+    "name": "Dessert"
   }
 ]
