@@ -26,10 +26,12 @@ app.get("/recipes", async (req, res) => {
   res.send(allRecipes);
 });
 
+//LIST ALL CATEGORIES: √
 app.get("/categories", async (req, res) => {
   const allCategories = await prisma.category.findMany();
   res.send(allCategories);
 });
+
 //DYNAMIC ROUTE FOR ID (GET): √
 app.get("/recipes/:id", async (req, res) => {
   const recipeId = Number(req.params.id);
@@ -37,8 +39,21 @@ app.get("/recipes/:id", async (req, res) => {
     res.status(400).send();
     return;
   }
-  const recipe = await prisma.recipe.findUnique({ where: { id: recipeId } });
-  console.log("Something went wrong!", recipe);
+  const recipe = await prisma.recipe.findUnique({
+    where: { id: recipeId },
+    //Include the objectives: √
+    include: {
+      categories: true,
+      user: {
+        //Select what will be displayed: √
+        select: {
+          password: false,
+          username: true,
+        },
+      },
+      comments: true,
+    },
+  });
 
   if (recipe === null) {
     res.status(404).send({ message: "Something went wrong!" });
@@ -84,27 +99,27 @@ app.post("/recipes", async (req, res) => {
 app.post("/recipes/:id/comment", async (req, res) => {
   const recipeId = Number(req.params.id);
   const bodyFromRequest = req.body;
-  console.log(bodyFromRequest);
+  // console.log(bodyFromRequest);
 
   //Step 1 - Making sure the route is a number: √
   if (isNaN(recipeId)) {
     res.status(400).send();
     return;
   }
-  //Step 2 - Combine recipeId: x (?)
+  //Step 2 - Combine recipeId: √
 
   //Data validation: √
   if (
     "name" in bodyFromRequest &&
     "review" in bodyFromRequest &&
-    "rating" in bodyFromRequest &&
-    "recipeId" in bodyFromRequest
+    "rating" in bodyFromRequest
+    // "recipeId" in bodyFromRequest -> We do not need this here otherwise it is not DRY for the user.
     // "createdAt" in bodyFromRequest
   ) {
     //Try and Catch any errors: √
     try {
       const newComment = await prisma.comment.create({
-        data: bodyFromRequest,
+        data: { ...bodyFromRequest, recipeId }, //Spread the arr. and add recipeId prevent WET for user.
       });
       res.status(201).send(newComment);
     } catch (error) {
