@@ -26,6 +26,10 @@ app.get("/recipes", async (req, res) => {
   res.send(allRecipes);
 });
 
+app.get("/categories", async (req, res) => {
+  const allCategories = await prisma.category.findMany();
+  res.send(allCategories);
+});
 //DYNAMIC ROUTE FOR ID (GET): √
 app.get("/recipes/:id", async (req, res) => {
   const recipeId = Number(req.params.id);
