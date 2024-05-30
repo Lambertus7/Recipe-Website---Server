@@ -2,6 +2,9 @@
 import express, { json } from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
+import { toToken } from "./auth/jwt";
+import { toData } from "./auth/jwt";
+import { AuthMiddleware, AuthRequest } from "./auth/middelware";
 
 // Create a server application
 const app = express();
@@ -26,10 +29,12 @@ app.get("/recipes", async (req, res) => {
   res.send(allRecipes);
 });
 
+//LIST ALL CATEGORIES: √
 app.get("/categories", async (req, res) => {
   const allCategories = await prisma.category.findMany();
   res.send(allCategories);
 });
+
 //DYNAMIC ROUTE FOR ID (GET): √
 app.get("/recipes/:id", async (req, res) => {
   const recipeId = Number(req.params.id);
@@ -39,9 +44,11 @@ app.get("/recipes/:id", async (req, res) => {
   }
   const recipe = await prisma.recipe.findUnique({
     where: { id: recipeId },
+    //Include the objectives: √
     include: {
       categories: true,
       user: {
+        //Select what will be displayed: √
         select: {
           password: false,
           username: true,
@@ -73,7 +80,7 @@ app.post("/recipes", async (req, res) => {
     "image_URL" in bodyFromRequest &&
     "categories" in bodyFromRequest
   ) {
-    //Try and Catch any errors:
+    //Try and Catch any errors: √
     try {
       const newRecipe = await prisma.recipe.create({ data: bodyFromRequest });
       res.status(201).send(newRecipe);
@@ -101,20 +108,20 @@ app.post("/recipes/:id/comment", async (req, res) => {
     res.status(400).send();
     return;
   }
-  //Step 2 - Combine recipeId: x (?)
+  //Step 2 - Combine recipeId: √
 
   //Data validation: √
   if (
     "name" in bodyFromRequest &&
     "review" in bodyFromRequest &&
-    "rating" in bodyFromRequest &&
-    "recipeId" in bodyFromRequest
+    "rating" in bodyFromRequest
+    // "recipeId" in bodyFromRequest -> We do not need this here otherwise it is not DRY for the user.
     // "createdAt" in bodyFromRequest
   ) {
     //Try and Catch any errors: √
     try {
       const newComment = await prisma.comment.create({
-        data: bodyFromRequest,
+        data: { ...bodyFromRequest, recipeId }, //Spread the arr. and add recipeId prevent WET for user.
       });
       res.status(201).send(newComment);
     } catch (error) {
@@ -168,8 +175,81 @@ app.delete("/recipes/:id", async (req, res) => {
   res.status(200).send({ message: "Great Success! Recipe was deleted!" });
 });
 
+/*USER ENDPOINTS*/
+
+//REGISTER USER (POST): x come back to finish.
+// app.post("/register", async (req, res) => {
+//   const bodyFromRequest = req.body;
+
+//   if (
+//     "age" in bodyFromRequest &&
+//     "username" in bodyFromRequest &&
+//     "password" in bodyFromRequest
+//   ) {
+//     try {
+//       await.prisma.create({data: bodyFromRequest})
+//     } res.status(201).send({message: "Account has been created!"})
+//   }
+// });
+
+//LOGIN USER (POST): √
+app.post("/login", async (req: AuthRequest, res) => {
+  const bodyFromRequest = req.body;
+  if ("username" in bodyFromRequest && "password" in bodyFromRequest) {
+    try {
+      // First find the user: √
+      const userToLogin = await prisma.user.findUnique({
+        where: {
+          username: bodyFromRequest.username,
+        },
+      });
+      if (userToLogin && userToLogin.password === bodyFromRequest.password) {
+        const token = toToken({ userId: userToLogin.id });
+        res.status(200).send({ token: token }); // Here we should actually send back the Keycard
+        return;
+      }
+      // If we didn't find the user or the password doesn't match, send back an error message
+      res.status(400).send({ message: "Login failed" });
+    } catch (error) {
+      // If we get an error, send back HTTP 500 (Server Error)
+      res.status(500).send({ message: "Something went wrong!" });
+    }
+  } else {
+    // If we are missing fields, send back a HTTP 400
+    res
+      .status(400)
+      .send({ message: "'username' and 'password' are required!" });
+  }
+});
+
 //LIST ALL USERS (GET): √
-app.get("/users", async (req, res) => {
+app.get("/users", AuthMiddleware, async (req: AuthRequest, res) => {
+  if (!req.userId) {
+    res.status(500).send("Something went wrong");
+    return;
+  }
+  // Get the headers
+  const headers = req.headers;
+  // Check if the authorization key is in the headers and if the token is provided correctly
+  if (
+    headers["authorization"] && // Is the header there
+    headers["authorization"].split(" ")[0] === "Bearer" && // Is the first word (before the space) equal to "Bearer"
+    headers["authorization"].split(" ")[1] // Is there a part after the space
+  ) {
+    // get the token
+    const token = headers["authorization"].split(" ")[1];
+    try {
+      // Verify the token, this will throw an error if it isn't
+      const data = toData(token);
+      // If we reach this point the token was correct!
+    } catch (e) {
+      res.status(401).send({ message: "Token missing or invalid" });
+      return;
+    }
+  } else {
+    res.status(401).send({ message: "Token missing or invalid" });
+    return;
+  }
   const allUsers = await prisma.user.findMany({
     select: {
       id: true,
@@ -179,6 +259,17 @@ app.get("/users", async (req, res) => {
     },
   });
   res.send(allUsers);
+});
+
+//MIDDLEWARE:
+app.get("/path", AuthMiddleware, (req: AuthRequest, res) => {
+  // your route logic
+  // Inside here you can access req.userId to get the user's id
+  // Don't forget to add the following check
+  if (!req.userId) {
+    res.status(500).send("Something went wrong");
+    return;
+  }
 });
 
 //DYNAMIC ROUTE FOR USERS (GET): √

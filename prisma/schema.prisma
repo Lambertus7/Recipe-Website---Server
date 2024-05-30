@@ -17,7 +17,7 @@ datasource db {
 // Docs: https://dbml.dbdiagram.io/docs
 model User {
   id       Int      @id @default(autoincrement())
-  username String
+  username String   @unique
   password String
   recipes  Recipe[]
 }
