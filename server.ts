@@ -37,8 +37,19 @@ app.get("/recipes/:id", async (req, res) => {
     res.status(400).send();
     return;
   }
-  const recipe = await prisma.recipe.findUnique({ where: { id: recipeId } });
-  console.log("Something went wrong!", recipe);
+  const recipe = await prisma.recipe.findUnique({
+    where: { id: recipeId },
+    include: {
+      categories: true,
+      user: {
+        select: {
+          password: false,
+          username: true,
+        },
+      },
+      comments: true,
+    },
+  });
 
   if (recipe === null) {
     res.status(404).send({ message: "Something went wrong!" });
@@ -84,7 +95,6 @@ app.post("/recipes", async (req, res) => {
 app.post("/recipes/:id/comment", async (req, res) => {
   const recipeId = Number(req.params.id);
   const bodyFromRequest = req.body;
-  console.log(bodyFromRequest);
 
   //Step 1 - Making sure the route is a number: √
   if (isNaN(recipeId)) {
