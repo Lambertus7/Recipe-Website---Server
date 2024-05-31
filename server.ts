@@ -77,12 +77,14 @@ app.post("/recipes", async (req, res) => {
     "ingredients" in bodyFromRequest &&
     "preptime" in bodyFromRequest &&
     // "serves" in bodyFromRequest &&
-    "image_URL" in bodyFromRequest &&
-    "categories" in bodyFromRequest
+    "image_URL" in bodyFromRequest
+    // "categories" in bodyFromRequest
   ) {
     //Try and Catch any errors: √
     try {
-      const newRecipe = await prisma.recipe.create({ data: bodyFromRequest });
+      const newRecipe = await prisma.recipe.create({
+        data: { ...bodyFromRequest, categories: { connect: [] }, userId: 1 }, //This is until we add Auth
+      });
       res.status(201).send(newRecipe);
     } catch (error) {
       console.log(error);
@@ -139,6 +141,8 @@ app.post("/recipes/:id/comment", async (req, res) => {
   }
 });
 
+//LIST ALL EXISTING COMMENTS: x
+
 //TO EDIT/UPDATE (PATCH): √
 app.patch("/recipes/:id", async (req, res) => {
   const recipeId = Number(req.params.id);
@@ -177,21 +181,6 @@ app.delete("/recipes/:id", async (req, res) => {
 });
 
 /*USER ENDPOINTS*/
-
-//REGISTER USER (POST): x come back to finish.
-// app.post("/register", async (req, res) => {
-//   const bodyFromRequest = req.body;
-
-//   if (
-//     "age" in bodyFromRequest &&
-//     "username" in bodyFromRequest &&
-//     "password" in bodyFromRequest
-//   ) {
-//     try {
-//       await.prisma.create({data: bodyFromRequest})
-//     } res.status(201).send({message: "Account has been created!"})
-//   }
-// });
 
 //LOGIN USER (POST): √
 app.post("/login", async (req: AuthRequest, res) => {
